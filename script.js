@@ -34,11 +34,59 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const timer = document.getElementById("timer");
     if (timer) {
-      timer.innerText = `${meses} mês(es), ${dias} dia(s), ${horas}h ${minutos}m ${segundos}s`;
+      timer.innerText = `${meses} meses, ${dias} dia(s), ${horas}h ${minutos}m ${segundos}s`;
     }
   }
 
   atualizarContador();
   setInterval(atualizarContador, 1000);
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const musicas = [
+    "midias/som1.mp3",
+    "midias/som2.mp3",
+    "midias/som3.mp3",
+    "midias/som4.mp3",
+    "midias/som5.mp3",
+    "midias/som6.mp3"
+  ];
+
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+
+  shuffleArray(musicas);
+  let currentIndex = 0;
+
+  const audio = new Audio();
+  audio.volume = 1;
+
+  function tocarMusica() {
+    audio.src = musicas[currentIndex];
+    audio.play().then(() => {
+      console.log("🎵 Tocando:", musicas[currentIndex]);
+    }).catch((err) => {
+      console.warn("⚠️ Autoplay bloqueado, precisa de interação.");
+    });
+  }
+
+  audio.addEventListener("ended", () => {
+    currentIndex = (currentIndex + 1) % musicas.length;
+    tocarMusica();
+  });
+
+  // tenta tocar direto
+  tocarMusica();
+
+  // se der ruim, espera clique do usuário
+  document.addEventListener("click", () => {
+    if (audio.paused) {
+      tocarMusica();
+    }
+  });
 });
 
